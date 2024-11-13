@@ -8,15 +8,15 @@ echo "
                ▟███████▙
               ▂▔▀▜██████▙
              ▟██▅▂▝▜█████▙               ==================================
-            ▟█████████████▙                  KDE Plasma Installation Script
-           ▟███████████████▙               ==================================
+            ▟█████████████▙                KDE Plasma Installation Script
+           ▟███████████████▙             ==================================
           ▟█████████████████▙
          ▟███████████████████▙
         ▟█████████▛▀▀▜████████▙
        ▟████████▛      ▜███████▙
       ▟█████████        ████████▙
      ▟██████████        █████▆▅▄▃▂
-    ▟██████████▛        ▜█████████▙
+    ▟██████████▛        ▜█████████▙thallesb
    ▟██████▀▀▀              ▀▀██████▙
   ▟███▀▘                       ▝▀███▙
  ▟▛▀                               ▀▜▙
@@ -125,5 +125,43 @@ install_multimedia_integration
 install_customization_tools
 install_productivity_tools
 install_additional_tools
+
+
+# Instalao do yay (AUR HELPER)
+# Função para verificar se o comando foi bem-sucedido
+check_success() {
+    if [ $? -ne 0 ]; then
+        echo "Erro: $1"
+        exit 1
+    fi
+}
+
+# Verificar se o git está instalado
+if ! command -v git &> /dev/null; then
+    echo "Git não está instalado. Instalando git..."
+    sudo pacman -S --noconfirm git
+    check_success "Falha ao instalar git."
+else
+    echo "Git já está instalado."
+fi
+
+# Clonar o repositório do yay
+echo "Clonando o repositório do yay..."
+git clone https://aur.archlinux.org/yay.git
+check_success "Falha ao clonar o repositório do yay."
+
+# Acessar o diretório do yay
+cd yay || exit
+
+# Construir e instalar o yay
+echo "Instalando o yay..."
+makepkg -si --noconfirm
+check_success "Falha ao instalar o yay."
+
+# Limpar o diretório após a instalação
+cd ..
+rm -rf yay
+
+echo "yay foi instalado com sucesso!"
 
 echo "Instalação completa! Reinicie o sistema para aplicar as mudanças."
