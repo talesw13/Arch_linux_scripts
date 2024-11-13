@@ -153,7 +153,7 @@ check_success "Falha ao clonar o repositório do yay."
 # Acessar o diretório do yay
 cd yay || exit
 
-# Construir e instalar o yay
+# Construir e instalar o yay como usuário normal (sem sudo)
 echo "Instalando o yay..."
 makepkg -si --noconfirm
 check_success "Falha ao instalar o yay."
@@ -161,7 +161,5 @@ check_success "Falha ao instalar o yay."
 # Limpar o diretório após a instalação
 cd ..
 rm -rf yay
-
-echo "yay foi instalado com sucesso!"
 
 echo "Instalação completa! Reinicie o sistema para aplicar as mudanças."
