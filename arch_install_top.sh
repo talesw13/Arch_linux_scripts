@@ -136,7 +136,7 @@ check_success() {
     fi
 }
 
-# Verificar se o git está instalado
+# Verificar se o git está instalado, instalar se necessário
 if ! command -v git &> /dev/null; then
     echo "Git não está instalado. Instalando git..."
     sudo pacman -S --noconfirm git
@@ -145,21 +145,31 @@ else
     echo "Git já está instalado."
 fi
 
-# Clonar o repositório do yay
-echo "Clonando o repositório do yay..."
-git clone https://aur.archlinux.org/yay.git
-check_success "Falha ao clonar o repositório do yay."
+# Função para instalar o yay
+install_yay() {
+    # Clonar o repositório do yay
+    echo "Clonando o repositório do yay..."
+    git clone https://aur.archlinux.org/yay.git
+    check_success "Falha ao clonar o repositório do yay."
 
-# Acessar o diretório do yay
-cd yay || exit
+    # Acessar o diretório do yay
+    cd yay || exit
 
-# Construir e instalar o yay como usuário normal (sem sudo)
-echo "Instalando o yay..."
-makepkg -si --noconfirm
-check_success "Falha ao instalar o yay."
+    # Construir e instalar o yay como usuário normal
+    echo "Instalando o yay..."
+    makepkg -si --noconfirm
+    check_success "Falha ao instalar o yay."
 
-# Limpar o diretório após a instalação
-cd ..
-rm -rf yay
+    # Limpar o diretório após a instalação
+    cd ..
+    rm -rf yay
+
+    echo "yay foi instalado com sucesso!"
+}
+
+
+
+# Mude para o usuário normal e execute a função de instalação do yay
+sudo -u "$SUDO_USER" bash -c "$(declare -f install_yay); install_yay"
 
 echo "Instalação completa! Reinicie o sistema para aplicar as mudanças."
